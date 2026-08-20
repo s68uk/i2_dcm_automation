@@ -1,0 +1,1 @@
+30 6 * * * cd /home/s68uk/i2_dcm_automation && git pull && /home/s68uk/i2_dcm_automation/venv/bin/python /home/s68uk/i2_dcm_automation/i2_dcm_briefing.py >> /home/s68uk/i2_dcm_automation/briefing.log 2>&1
