@@ -1,11 +1,20 @@
 #!/usr/bin/env python3
 import feedparser
-import requests
-from bs4 import BeautifulSoup
 from datetime import datetime
 
 # ---------------------------------------------------------
-# Helper: Extract RSS feed items
+# Feed list (DCM‑relevant sources only)
+# ---------------------------------------------------------
+FEEDS = [
+    ("https://www.marketwatch.com/rss/bonds", "MarketWatch Bonds"),
+    ("https://www.investing.com/rss/news_25.rss", "Investing.com Bonds"),
+    ("https://www.businesswire.com/portal/site/home/rss/", "BusinessWire"),
+    ("https://www.globenewswire.com/RssFeed/industry/Financial%20Services", "GlobeNewswire"),
+    ("https://www.sec.gov/cgi-bin/browse-edgar?action=getcurrent&output=rss", "SEC Filings")
+]
+
+# ---------------------------------------------------------
+# Extract items from a feed
 # ---------------------------------------------------------
 def extract_feed(url, source, limit=10):
     feed = feedparser.parse(url)
@@ -16,32 +25,22 @@ def extract_feed(url, source, limit=10):
             "source": source,
             "title": entry.get("title", "No title"),
             "link": entry.get("link", ""),
-            "published": entry.get("published", ""),
+            "published": entry.get("published", "")
         })
     return items
 
 # ---------------------------------------------------------
-# Helper: Extract headline from webpage (fallback)
+# Build a section for one source
 # ---------------------------------------------------------
-def extract_webpage_title(url):
-    try:
-        r = requests.get(url, timeout=5)
-        soup = BeautifulSoup(r.text, "html.parser")
-        title = soup.find("title")
-        return title.text.strip() if title else "No title found"
-    except Exception:
-        return "No title found"
+def build_section(source, items):
+    if not items:
+        return f"{source}\n(No items found)\n"
 
-# ---------------------------------------------------------
-# Build briefing sections
-# ---------------------------------------------------------
-def build_section(items):
-    lines = []
+    lines = [f"{source}\n"]
     for item in items:
         published = item["published"] if item["published"] else "No timestamp"
-        lines.append(
-            f"{item['source']}: {item['title']} ({published})\n{item['link']}\n"
-        )
+        lines.append(f"- {item['title']} ({published})")
+        lines.append(f"  {item['link']}\n")
     return "\n".join(lines)
 
 # ---------------------------------------------------------
@@ -49,37 +48,13 @@ def build_section(items):
 # ---------------------------------------------------------
 def generate_briefing():
     now = datetime.now().strftime("%Y-%m-%d %H:%M")
+    briefing = [f"DCM Briefing — {now}\n", "=" * 60 + "\n"]
 
-    # RSS feeds
-    reuters_items = extract_feed(
-        "https://feeds.reuters.com/reuters/UKdomesticNews",
-        "Reuters"
-    )
-    ft_items = extract_feed(
-        "https://www.ft.com/?format=rss",
-        "Financial Times"
-    )
-    bloomberg_items = extract_feed(
-        "https://www.bloomberg.com/feeds/rss/markets",
-        "Bloomberg"
-    )
-
-    # Build briefing text
-    briefing = []
-    briefing.append(f"DCM Briefing — {now}\n")
-    briefing.append("=" * 60 + "\n")
-
-    briefing.append("REUTERS\n")
-    briefing.append(build_section(reuters_items))
-    briefing.append("\n" + "=" * 60 + "\n")
-
-    briefing.append("FINANCIAL TIMES\n")
-    briefing.append(build_section(ft_items))
-    briefing.append("\n" + "=" * 60 + "\n")
-
-    briefing.append("BLOOMBERG\n")
-    briefing.append(build_section(bloomberg_items))
-    briefing.append("\n" + "=" * 60 + "\n")
+    for url, source in FEEDS:
+        items = extract_feed(url, source)
+        section = build_section(source, items)
+        briefing.append(section)
+        briefing.append("\n" + "=" * 60 + "\n")
 
     return "\n".join(briefing)
 
@@ -87,8 +62,8 @@ def generate_briefing():
 # Write briefing to file
 # ---------------------------------------------------------
 def main():
-    briefing_text = generate_briefing()
     output_path = "/home/s68uk/i2_dcm_automation/briefing.txt"
+    briefing_text = generate_briefing()
 
     with open(output_path, "w") as f:
         f.write(briefing_text)
