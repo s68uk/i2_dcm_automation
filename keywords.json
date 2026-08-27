@@ -1,0 +1,35 @@
+{
+  "core": [
+    "default", "missed coupon", "covenant breach", "restructuring",
+    "chapter 11", "scheme of arrangement", "debt exchange",
+    "tender offer", "consent solicitation", "liability management",
+    "bondholder", "noteholder", "administration", "administrator appointed"
+  ],
+  "instruments_structures": [
+    "rmbs", "mortgage-backed", "senior notes", "secured notes",
+    "term loan", "bridge facility"
+  ],
+  "sanctions_cross_border": ["sanctions", "ofac", "sdn list", "blocked property"],
+  "extended": [
+    "restructuring advisor", "creditor committee", "liability management exercise",
+    "exchange offer", "waiver", "amend and extend", "new money", "haircut",
+    "distressed", "recovery plan", "insolvency", "liquidation",
+    "scheme meeting", "trustee appointed", "agency appointment"
+  ],
+  "co_occurrence_only": ["financial advisor", "recovery plan"],
+  "named_situations": [
+    "air baltic", "nord stream", "schleich", "sound energy", "paratus amc",
+    "goldman sachs", "morgan stanley", "blackrock", "intesa sanpaolo",
+    "thames water", "southern water", "fantasia holdings", "kwg group",
+    "lycra company", "wallbox", "segula", "new fortress energy",
+    "grupo antolin", "lithium americas", "first brands"
+  ],
+  "law_firms": [
+    "milbank", "kirkland & ellis", "linklaters", "a&o shearman",
+    "akin gump", "latham & watkins", "gibson dunn"
+  ],
+  "advisers_competitors_systems": [
+    "houlihan lokey", "pjt partners", "fti consulting", "kroll", "glas",
+    "euroclear", "clearstream", "dtc"
+  ]
+}
