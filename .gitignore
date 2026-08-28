@@ -1,0 +1,8 @@
+.env
+briefing.log
+briefing.txt
+briefing.lock
+seen_stories.json
+venv/
+__pycache__/
+*.pyc
